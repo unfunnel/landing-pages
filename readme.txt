@@ -7,7 +7,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: landing pages, inbound marketing, conversion pages, split testing, a b test, a b testing, a/b test, a/b testing, coming soon page, email list, landing page, list building, maintenance page, squeeze page, inbound now, landing-pages, splash pages, cpa, click tracking, goal tracking, analytics
 Requires at least: 3.3
 Tested up to: 3.5
-Stable Tag: 1.0.2.3
+Stable Tag: 1.0.5.3
 
 Create landing pages for your WordPress site. Monitor and improve conversion rates, run A/B split tests, customize your own templates and more.
 
@@ -40,7 +40,7 @@ http://www.youtube.com/watch?v=BzcD6PgvLP4
 
 We built the landing page plugin as a framework! You can use it add value to your existing clients.
 
-You can quickly take your existing designs and implement them using our <a href="http://plugins.inboundnow.com/docs/dev/">templating framework</a>.
+You can quickly take your existing designs and implement them using our <a href="http://www.inboundnow.com/landing-pages/docs/dev/">templating framework</a>.
 
 The plugin is also fully extendable and has a number of actions, filters, and hooks available for use.
 
@@ -66,3 +66,36 @@ The plugin is also fully extendable and has a number of actions, filters, and ho
 
 Released
 
+
+= 1.0.3.7 =
+
+Bug Fix: 'Clear Stats' button.
+
+= 1.0.3.8 =
+
+Debugging cross browser impressions and conversion tracking. Implemented soltion for url-to-postid conversions that's compatible with the /slug/ removal extension for landing pages plugin.
+Added email validation check to prevent false positives when form standardization is turned on.
+
+= 1.0.3.9 =
+
+Fixed issue with plugins and wp core refusing to update on some installations when landing page plugin is activated. 
+
+= 1.0.4.1 =
+
+Fixed issue with conversions not recording on some servers by forcing form submittal to wait until ajax has completely finnished loading before continuing to process form.  
+
+= 1.0.4.2 =
+
+Added new defitions to form standardization parser. Limited .htaccess rewrites to plugin activation to try and mitigate .htaccess corruptions.  
+
+= 1.0.4.4 =
+
+Migrating store to new location.  Updating version control systems   
+
+= 1.0.5.1 =
+
+Introducing version control system for extensions.
+
+= 1.0.5.3 =
+
+Solutions for custom post type wp rewrite issue on activation.
