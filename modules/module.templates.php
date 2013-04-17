@@ -40,8 +40,12 @@ else if (isset($_GET['page'])&&$_GET['page']=='lp_manage_templates')
 			global $lp_data; 
 			foreach ($lp_data as $key=>$value)
 			{
-				if ($key!='lp'&&$key!='main'&&$key!='main'&&substr($key,0,4)!='ext-')
+				$array_core_templates = array('countdown-lander','default','demo','dropcap','half-and-half','simple-two-column','super-slick','svtle','tubelar','rsvp-envelope');
+				
+				if ($key!='lp'&&!in_array($key,$array_core_templates)&&substr($key,0,4)!='ext-')
 				{
+					//echo $key;
+					//echo "<br>";
 					if (isset($_POST['s'])&&!empty($_POST['s']))
 					{
 						if (!stristr($value['label'],$_POST['s']))
@@ -146,14 +150,20 @@ else if (isset($_GET['page'])&&$_GET['page']=='lp_manage_templates')
 			$sortable = $this->get_sortable_columns();
 			
 			$this->_column_headers = array( $columns, $hidden, $sortable );
-			usort( $this->template_data, array( &$this, 'usort_reorder' ) );
+			if(is_array($this->template_data))
+			{
+				usort( $this->template_data, array( &$this, 'usort_reorder' ) );
+			}
 			
 			$per_page = 25;
 			$current_page = $this->get_pagenum();
 			
 			$total_items = count( $this->template_data );
-
-			$this->found_data = array_slice( $this->template_data,( ( $current_page-1 )* $per_page ), $per_page );
+			
+			if (is_array($this->template_data))
+			{
+				$this->found_data = array_slice( $this->template_data,( ( $current_page-1 )* $per_page ), $per_page );
+			}
 			
 			$this->set_pagination_args( array(
 				'total_items' => $total_items,                  //WE have to calculate the total number of items
@@ -200,7 +210,7 @@ else if (isset($_GET['page'])&&$_GET['page']=='lp_manage_templates')
 	 
 		function no_items() 
 		{
-			_e( 'No templates installed... weird.' );
+			_e( 'No premium templates installed. Templates included in the Landing Pages core plugin will not be listed here.' );
 		}
 		
 		function get_bulk_actions() 
@@ -216,7 +226,6 @@ else if (isset($_GET['page'])&&$_GET['page']=='lp_manage_templates')
 		}
 
 	}
-	$myListTable = new LP_MANAGE_TEMPLATES();
 	
 
 	
@@ -359,7 +368,7 @@ else if (isset($_GET['page'])&&$_GET['page']=='lp_manage_templates')
 	{
 		$version = $item['version'];
 		$api_response = lp_template_api_request( $item );
-		//print_r($api_response);exit;
+		//print_r($api_response);
 		if( false !== $api_response ) 
 		{
 			if( version_compare( $version, $api_response['new_version'], '<' ) )

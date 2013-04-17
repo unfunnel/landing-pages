@@ -7,7 +7,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: landing pages, inbound marketing, conversion pages, split testing, a b test, a b testing, a/b test, a/b testing, coming soon page, email list, landing page, list building, maintenance page, squeeze page, inbound now, landing-pages, splash pages, cpa, click tracking, goal tracking, analytics
 Requires at least: 3.3
 Tested up to: 3.5
-Stable Tag: 1.0.5.3
+Stable Tag: 1.0.8.3
 
 Create landing pages for your WordPress site. Monitor and improve conversion rates, run A/B split tests, customize your own templates and more.
 
@@ -25,7 +25,9 @@ Landing pages are an ideal way to convert more of your passive website visitors 
 * Track conversion rates on your landing pages for continual optimization.
 * Easily clone existing landing pages and run A/B Split tests on variations.
 * Use your current WordPress theme or choose from our library of custom landing page designs.
-* Extend functionality with our growing repository of third party add ons.
+* Pre-populate Forms with visitor information to increase conversion rates
+* Gather lead intelligence and track lead activity
+* Extend functionality with our growing repository of <a href="http://www.inboundnow.com/landing-pages/downloads/category/add-ons/">third party add ons</a>.
 * Easily implement your own custom landing page design.
 
 This plugin is form agnostic meaning it will work with any form system you use.
@@ -99,3 +101,27 @@ Introducing version control system for extensions.
 = 1.0.5.3 =
 
 Solutions for custom post type wp rewrite issue on activation.
+
+= 1.0.5.6 =
+
+Fixed issue with global setting's radio buttons not holding new set values.
+
+= 1.0.7.1 =
+
+Added cookie based auto-field population & lead data collection to core.
+
+= 1.0.7.3 =
+
+Fixed issue with WP_List_table causing posts to to save or edit propperly Attempt 001
+
+= 1.0.7.9 =
+
+Added capability to activate and update license keys for premium extensions. Added ability to define white listed HTML elements for Form Standardization process.
+
+= 1.0.8.1 =
+
+Fixing issue with jquery submission errors.
+
+= 1.0.8.3 =
+
+Improved data passed into lp_store_lead_post hook. 

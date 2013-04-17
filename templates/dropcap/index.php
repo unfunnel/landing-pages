@@ -9,7 +9,7 @@ $key = lp_get_parent_directory(dirname(__FILE__));
 $path = LANDINGPAGES_URLPATH.'templates/'.$key.'/';
 $url = plugins_url();
 /* Define Landing Pages's custom pre-load hook for 3rd party plugin integration */
-lp_init();
+do_action('lp_init');
 
 /* Load $post data */
 if (have_posts()) : while (have_posts()) : the_post();
@@ -92,7 +92,7 @@ body { <?php echo $bg_style; ?> }
 <?php } ?>
 <?php if ($form_text_color != "") { echo "#lp_container {color: #$form_text_color;}"; } ?>	
 </style>
-<?php lp_head(); // Load Custom Landing Page Specific Header Items ?>
+<?php do_action('lp_head'); // Load Custom Landing Page Specific Header Items ?>
 </head>
 
 
@@ -112,9 +112,9 @@ echo $rebuild_form_options; ?>
 </div>
 </div>
 </div> 
-<?php endwhile; endif; // end wordpress loop
+<?php break; endwhile; endif; // end wordpress loop
 
-lp_footer(); // Load Landing Page Footer Hook
+do_action('lp_footer'); // Load Landing Page Footer Hook
 wp_footer();
 ?> 
 	<link href="<?php echo $path; ?>assets/css/form.css" rel="stylesheet">

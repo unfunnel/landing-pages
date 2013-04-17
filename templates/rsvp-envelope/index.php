@@ -4,12 +4,15 @@
 // Plugin: Landing Pages - Inboundnow.com
 /*****************************************/
 
+/* Include Shareme Library */
+include_once(LANDINGPAGES_PATH.'libraries/library.shareme.php');
+
 /* Declare Template Key */
 $key = lp_get_parent_directory(dirname(__FILE__)); 
 $path = LANDINGPAGES_URLPATH.'templates/'.$key.'/';
 $url = plugins_url();
 /* Define Landing Pages's custom pre-load hook for 3rd party plugin integration */
-lp_init();
+do_action('lp_init');
 
 /* Load $post data */
 if (have_posts()) : while (have_posts()) : the_post();
@@ -72,7 +75,7 @@ if (have_posts()) : while (have_posts()) : the_post();
             ?>
         </style>
         <?php wp_head(); // Load Regular WP Head 
-        	lp_head(); // Load Custom Landing Page Specific Header Items ?>
+        	do_action('lp_head'); // Load Custom Landing Page Specific Header Items ?>
         <script src="<?php echo $path; ?>assets/js/jquery-1.3.2.min.js"></script>
         <!--[if IE]>
             <script>
@@ -110,8 +113,8 @@ if (have_posts()) : while (have_posts()) : the_post();
                 jQuery("input[type='submit']:first").css("margin-top", "10px");
             });
         </script>
-        <?php endwhile; endif; 
-        lp_footer(); 
+        <?php break; endwhile; endif; 
+        do_action('lp_footer'); 
         wp_footer(); ?>
     </body>
 

@@ -1,22 +1,51 @@
 jQuery(document).ready(function ($) {
 
+    jQuery("#submitdiv").siblings().hide(); 
+    jQuery("#title-prompt-text").text("Name Your New Landing Page");
+    var titledescription = jQuery("<span id='descriptor'>This will be the administrative title your landing page, the main headline is created in the next step</span>");
+jQuery(titledescription).appendTo("#titlewrap");
+
+    jQuery("#save-action input").addClass("button-primary button-large").css("margin-bottom", "10px").attr("value", "Create Landing Page"); 
+    var sidebar = jQuery("#side-sortables");
+    jQuery(sidebar).appendTo("#titlediv"); 
+    var tempdiv = jQuery("<div id='templates' class='postbox'><h3 class='hndle'>Current Template: <span id='ctemp'></span></h3><div id='lp_the_image'><span id='timage'><img src='' id='c_temp'></span></div><div id='template_current'></div></div>");
+        jQuery(tempdiv).appendTo("#titlewrap");
+        var changebutton = jQuery("#lp_template_change");
+jQuery(changebutton).appendTo("#templates");
+jQuery("#lp_template_change a").removeClass("button-primary").addClass("button");
+// New Sidebar 
+jQuery("#postbox-container-1").html("<div class='postbox'><center><h3>Download Additional Templates</h3><a target='_blank' href='/wp-admin/edit.php?post_type=landing-page&page=lp_store'><img src='/wp-content/plugins/landing-pages/images/get-wordpress-templates.png'></a><a target='_blank' href='/wp-admin/edit.php?post_type=landing-page&page=lp_store' class='button new-lp-button button-primary button-large'>Download Landing Page Templates</a></center></div>");
     jQuery('.lp_select_template').click(function(){
     jQuery(".mceIframeContainer iframe#content_ifr").css("height", "100%");
     jQuery("#wp-content-editor-container .mceStatusbar").css("display", "none");
     });
 
+jQuery('.lp_select_template').click(function(){
+        var template = jQuery(this).attr('id');
+        var label = jQuery(this).attr('label');
+        var template_image = "#" + template + " .template-thumbnail";
+        var template_img_obj = jQuery(template_image).attr("src");
+      //alert(template_image);
+        jQuery("#ctemp").text(label);
+       jQuery("#timage #c_temp").attr("src", template_img_obj);
+       jQuery("#submitdiv .hndle span").text("Create Landing Page");
+        //alert(template);
+        //alert(label);
+    });
+
+
 
 jQuery("#template-box a").live('click', function () {
 
-	setTimeout(function() {
+    setTimeout(function() {
      jQuery('#TB_window iframe').contents().find("#customize-controls").hide();
-		jQuery('#TB_window iframe').contents().find(".wp-full-overlay.expanded").css("margin-left", "0px");
-  	}, 1200);
+        jQuery('#TB_window iframe').contents().find(".wp-full-overlay.expanded").css("margin-left", "0px");
+    }, 1200);
      
     });
 
-	// Fix Thickbox width
-	jQuery(function($) {
+    // Fix Thickbox width
+    jQuery(function($) {
     tb_position = function() {
         var tbWindow = $('#TB_window');
         var width = $(window).width();

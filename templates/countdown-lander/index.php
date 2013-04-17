@@ -12,7 +12,7 @@ $key = lp_get_parent_directory(dirname(__FILE__));
 $path = LANDINGPAGES_URLPATH.'templates/'.$key.'/';
 $url = plugins_url();
 /* Define Landing Pages's custom pre-load hook for 3rd party plugin integration */
-lp_init();
+do_action('lp_init');
 
 /* Load $post data */
 if (have_posts()) : while (have_posts()) : the_post();
@@ -69,7 +69,7 @@ $blue = $RBG_array["b"];
         <title><?php wp_title(); ?></title>
     <?php /* Load all functions hooked to lp_head including global js and global css */
         wp_head(); // Load Regular WP Head
-        lp_head(); // Load Custom Landing Page Specific Header Items
+        do_action('lp_head'); // Load Custom Landing Page Specific Header Items
 ?>
         
         <!-- Our CSS stylesheet file -->
@@ -203,9 +203,9 @@ jQuery(function(){
 jQuery('#lp_container').center();*/
         </script>
 <?php 
-endwhile; endif; 
+break; endwhile; endif; 
 
-lp_footer();
+do_action('lp_footer');
 wp_footer();
 ?> 
 </div> 

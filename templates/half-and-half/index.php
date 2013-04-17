@@ -12,8 +12,8 @@ $key = lp_get_parent_directory(dirname(__FILE__)); // unique ID associated with 
 $path = LANDINGPAGES_URLPATH.'templates/'.$key.'/'; // path to template folder
 $url = plugins_url();
 
-/* Define Landing Pages's custom pre-load lp_init(); hook for 3rd party plugin integration */
-lp_init();
+/* Define Landing Pages's custom pre-load do_action('lp_init'); hook for 3rd party plugin integration */
+do_action('lp_init');
 
 /* Start WordPress Loop and Load $post data */
 if (have_posts()) : while (have_posts()) : the_post();
@@ -80,7 +80,7 @@ if (have_posts()) : while (have_posts()) : the_post();
         @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300); 
     </style>
     <?php wp_head(); // Load Regular WP Head ?>
-    <?php lp_head(); // Load Landing Page Specific Header Items ?>
+    <?php do_action('lp_head'); // Load Landing Page Specific Header Items ?>
 </head>
 <body>
     <!--[if lt IE 7]>
@@ -124,8 +124,8 @@ if (have_posts()) : while (have_posts()) : the_post();
             margin-left: -240px;
         }
     </style>
-    <?php endwhile; endif; // end WordPress Loop 
-    lp_footer(); // load landing pages footer hook 
+    <?php break; endwhile; endif; // end WordPress Loop 
+    do_action('lp_footer'); // load landing pages footer hook 
     wp_footer(); // load normal wordpress footer
     ?>
 </body>

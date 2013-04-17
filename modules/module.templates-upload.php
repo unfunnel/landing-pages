@@ -23,8 +23,10 @@ function lp_display_upload()
 		</ul>
 	
 		<br class="clear">
-			<h4>Install a template by uploading it in .zip format</h4>
-			<p class="install-help">If you have a template in a .zip format, you may install it by uploading it here.</p>
+			<h4>Install Landing Pages template by uploading them here in .zip format</h4>
+			
+			 <p class="install-help">Warning: Do not upload landing page extensions here or you will break the plugin! <br>Extensions are uploaded in the WordPress plugins section.
+			</p>
 			<form action="" class="wp-upload-form" enctype="multipart/form-data" method="post">
 				<input type="hidden" value="<?php echo wp_create_nonce('lp-nonce'); ?>" name="lp_wpnonce" id="_wpnonce">
 				<input type="hidden" value="/wp-admin/plugin-install.php?tab=upload" name="_wp_http_referer">

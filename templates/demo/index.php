@@ -11,14 +11,10 @@
 
 /* Step 1: Declare Template Key. This will be automatically detected for you */
 $key = lp_get_parent_directory(dirname(__FILE__));
-$path = LANDINGPAGES_URLPATH.'templates/'.$key.'/'; // This defines the path to the core template folder, read note on next line.
-/* NOTE */
-// In Your Custom Templates you will want to use:
-// $path = LANDINGPAGES_UPLOADS_URLPATH.$key.'/'; 
-// This will define the correct path for third party templates in the /wp-content/uploads/landing-pages/templates/ folder
+$path = LANDINGPAGES_URLPATH.'templates/'.$key.'/'; // This defines the path to your template folder
 
 /* Define Landing Pages's custom pre-load hook for 3rd party plugin integration */
-lp_init();
+do_action('lp_init');
 
 /* Load Regular WordPress $post data and start the loop */
 if (have_posts()) : while (have_posts()) : the_post();
@@ -88,7 +84,7 @@ $content = get_the_content();
 <!-- Load Normal WordPress wp_head() function -->
 <?php wp_head(); ?> 
 <!-- Load Landing Pages's custom pre-load hook for 3rd party plugin integration -->
-<?php lp_head(); ?>
+<?php do_action('lp_head'); ?>
 
 </head>
 <!-- lp_body_class(); Defines Custom Body Classes for Advanced User CSS Customization -->
@@ -144,8 +140,9 @@ $content = get_the_content();
 
 
 <?php 
+break;//sometimes a plugn or theme will reset the query during the loop, causing an infinite loop. We only need on loop pass so lets go ahead and break the loop to prevent possible lp load failures. 
 endwhile; endif; 
-lp_footer(); // Load custom landing footer hook for 3rd party extensions
+do_action('lp_footer'); // Load custom landing footer hook for 3rd party extensions
 wp_footer(); // Load normal wordpress footer
 ?>  
 </body>

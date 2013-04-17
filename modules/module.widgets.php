@@ -41,9 +41,16 @@ class lp_conversion_area_widget extends WP_Widget
 			{
 				$title = apply_filters('widget_title', $instance['title'] );
 				
-				$conversion_area = get_post_meta($this_id, 'lp-conversion-area', true);
-				$conversion_area = do_shortcode($conversion_area);
-				$conversion_area = "<div id='lp_container'>" . $conversion_area . "</div>";
+				$conversion_area = do_shortcode(get_post_meta($this_id, 'lp-conversion-area', true));
+				$standardize_form = get_option( 'main-landing-page-auto-format-forms' , 1); // conditional to check for options
+				if ($standardize_form) 
+				{
+					$wrapper_class = lp_discover_important_wrappers($conversion_area);
+					$conversion_area = lp_rebuild_attributes($conversion_area);	
+				}
+				//echo $conversion_area;exit;
+				$conversion_area = "<div id='lp_container' class='$wrapper_class'>".$conversion_area."</div>";		
+			
 				/* Before widget (defined by themes). */
 				echo $before_widget;
 

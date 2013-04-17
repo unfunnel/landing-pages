@@ -5,7 +5,7 @@
 *
 * @package  WordPress Landing Pages
 * @author 	David Wells
-*
+
 */
 
 lp_global_config(); // The lp_global_config function is for global code added by 3rd party extensions
