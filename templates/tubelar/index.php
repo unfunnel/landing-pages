@@ -129,7 +129,7 @@ $blue = $RBG_array["b"];
 		top:175px;
 		}</style>
 		<div class="black-50">
-			<h1><?php the_title(); ?> <?php echo $controls;?></h1>
+			<h1><?php the_title(); ?></h1>
 			
 			<?php the_content();?>
 

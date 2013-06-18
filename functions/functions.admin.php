@@ -2,7 +2,7 @@
 
 
 add_action('admin_enqueue_scripts','lp_admin_enqueue');
-
+	
 function lp_admin_enqueue($hook)
 {
 	global $post;
@@ -17,8 +17,9 @@ function lp_admin_enqueue($hook)
 	//jpicker - color picker
 	wp_enqueue_script('jpicker', LANDINGPAGES_URLPATH . 'js/jpicker/jpicker-1.1.6.min.js');
 	wp_localize_script( 'jpicker', 'jpicker', array( 'thispath' => LANDINGPAGES_URLPATH.'js/jpicker/images/' ));
+	//wp_enqueue_style('jpicker-css', LANDINGPAGES_URLPATH . 'js/jpicker/css/jPicker.css');	// have min below
 	wp_enqueue_style('jpicker-css', LANDINGPAGES_URLPATH . 'js/jpicker/css/jPicker-1.1.6.min.css');
-	wp_enqueue_style('jpicker-css', LANDINGPAGES_URLPATH . 'js/jpicker/css/jPicker.css');	
+	
 	
 	//Tool tip script
 	wp_dequeue_script('jquery-qtip');
@@ -32,13 +33,16 @@ function lp_admin_enqueue($hook)
 	if (isset($_GET['page']) && (($_GET['page'] == 'lp_store') || ($_GET['page'] == 'lp_addons'))) {
 		wp_dequeue_script('easyXDM');
 		wp_enqueue_script('easyXDM', LANDINGPAGES_URLPATH . 'js/easyXDM.debug.js');
+		//wp_enqueue_script('lp-js-store', LANDINGPAGES_URLPATH . 'js/admin.store.js');
 	} 
 	
 
-	//Admin enqueue - Landing Page CPT only 
+	// Admin enqueue - Landing Page CPT only 
 	if ( isset($post) && 'landing-page' == $post->post_type ) 
 	{ 
+		wp_enqueue_style('lp-only-cpt-admin-css', LANDINGPAGES_URLPATH . 'css/admin-lp-cpt-only-style.css');
 		wp_enqueue_script('lp-post-edit-ui', LANDINGPAGES_URLPATH . 'js/admin.post-edit.js');
+		wp_localize_script( 'lp-post-edit-ui', 'lp_post_edit_ui', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ), 'wp_landing_page_meta_nonce' => wp_create_nonce('wp-landing-page-meta-nonce') ) );
 		
 		//admin.metaboxes.js - Template Selector - Media Uploader
 		wp_enqueue_script('lp-js-metaboxes', LANDINGPAGES_URLPATH . 'js/admin.metaboxes.js');
@@ -47,10 +51,13 @@ function lp_admin_enqueue($hook)
 		$template_data = json_encode($template_data);
 		
 		$template = get_post_meta($post->ID, 'lp-selected-template', true);	
+		$template = apply_filters('lp_selected_template',$template); 
+		
 		$template = strtolower($template);	
 
 		$params = array('selected_template'=>$template, 'templates'=>$template_data);
 		wp_localize_script('lp-js-metaboxes', 'data', $params);
+		// Isotope sorting
 		wp_enqueue_script('lp-js-isotope', LANDINGPAGES_URLPATH . 'js/isotope/jquery.isotope.js', array('jquery'), '1.0', true );
 		wp_enqueue_style('lp-css-isotope', LANDINGPAGES_URLPATH . 'js/isotope/css/style.css');
 		
@@ -69,6 +76,8 @@ function lp_admin_enqueue($hook)
 			wp_dequeue_script('jquery-tinymce');
 			wp_enqueue_script('jquery-tinymce', LANDINGPAGES_URLPATH . 'js/tiny_mce/jquery.tinymce.js');
 
+			// Main edit screen CSS
+			wp_enqueue_style('admin-post-edit-css', LANDINGPAGES_URLPATH . '/css/admin-post-edit.css');
 
 			// jquery datepicker
 			wp_enqueue_script('jquery-datepicker', LANDINGPAGES_URLPATH . 'js/jquery-datepicker/jquery.timepicker.min.js');
@@ -79,6 +88,16 @@ function lp_admin_enqueue($hook)
 			wp_enqueue_style('jquery-timepicker-css', LANDINGPAGES_URLPATH . 'js/jquery-datepicker/jquery.timepicker.css');
 			wp_enqueue_style('jquery-datepicker-base.css', LANDINGPAGES_URLPATH . 'js/jquery-datepicker/lib/base.css');		
 		}
+		// Admin UI for Landing Page List
+		if ( $hook == 'edit.php' && (isset($_GET['post_type']) && ($_GET['post_type'] == 'landing-page') ) ) 
+		{
+		wp_enqueue_script(array('jquery', 'editor', 'thickbox', 'media-upload'));
+		wp_enqueue_script('landing-page-list', LANDINGPAGES_URLPATH . 'js/admin.landing-page-list.js');
+		wp_enqueue_style('landing-page-list-css', LANDINGPAGES_URLPATH.'css/admin-landing-page-list.css');
+		wp_admin_css('thickbox');
+		add_thickbox(); 
+		}
+
 	}
 }
 
@@ -144,6 +163,7 @@ function lp_generate_meta()
 	{
 		if (substr($key,0,4)=='ext-')
 		{
+			//echo 1; exit;
 			$id = strtolower(str_replace(' ','-',$key));
 			$name = ucwords(str_replace(array('-','ext '),' ',$key));
 			//echo $key."<br>";
@@ -166,7 +186,10 @@ function lp_show_metabox($post,$key)
 {
 	global $lp_data;
 	$key = $key['args']['key'];
-	$lp_custom_fields = $lp_data[$key]['options'];		
+
+	$lp_custom_fields = $lp_data[$key]['options'];
+	$lp_custom_fields = apply_filters('lp_show_metabox',$lp_custom_fields, $key);
+	
 	lp_render_metabox($key,$lp_custom_fields,$post);
 }
 
@@ -227,7 +250,7 @@ function lp_save_meta($post_id) {
 				
 				// loop through fields and save the data
 				foreach ($lp_custom_fields as $field) {
-				//echo $key.":".$field['id'];
+				//echo $key.":".$field['id']."<br>";
 
 					if($field['type'] == 'tax_select') continue;
 						$old = get_post_meta($post_id, $field['id'], true);				
@@ -415,6 +438,15 @@ function lp_add_option($key,$type,$id,$default=null,$label=null,$description=nul
 			'default'  => $default
 			);
 			break;
+		case "default-content":
+			return array(
+			'label' => $label,
+			'desc'  => $description,
+			'id'    => $key.'-'.$id,
+			'type'  => 'default-content',
+			'default'  => $default
+			);
+			break;	
 	}
 }
 
@@ -431,25 +463,31 @@ function lp_render_metabox($key,$custom_fields,$post)
 		$label_class = $raw_option_id . "-label";
 		// get value of this field if it exists for this post
 		$meta = get_post_meta($post->ID, $field['id'], true);
-		
 
-		if ((!isset($meta)&&isset($field['default']))||isset($meta)&&empty($meta)&&isset($field['default'])&&$meta!==0)
+
+		if ((!isset($meta)&&isset($field['default'])&&!is_numeric($meta))||isset($meta)&&empty($meta)&&isset($field['default'])&&!is_numeric($meta))
 		{
+			//echo $field['id'].":".$meta;
+			//echo "<br>";
 			$meta = $field['default'];
 		}
 
 		// begin a table row with
-		echo '<tr class="'.$field['id'].' '.$raw_option_id.'">
+		echo '<tr class="'.$field['id'].' '.$raw_option_id.' landing-page-option-row">
 				<th class="landing-page-table-header '.$label_class.'"><label for="'.$field['id'].'">'.$field['label'].'</label></th>
-				<td>';
+				<td class="landing-page-option-td">';
 				switch($field['type']) {
+					// default content for the_content
+					case 'default-content':
+						echo '<span id="overwrite-content" class="button-secondary">Insert Default Content into main Content area</span><div style="display:none;"><textarea name="'.$field['id'].'" id="'.$field['id'].'" class="default-content" cols="106" rows="6" style="width: 75%; display:hidden;">'.$meta.'</textarea></div>';
+						break;
 					// text
 					case 'colorpicker':
 						if (!$meta)
 						{
 							$meta = $field['default'];
 						}
-						echo '<input type="text" class="jpicker" style="background-color:#'.$meta.'" name="'.$field['id'].'" id="'.$field['id'].'" value="'.$meta.'" size="5" />
+						echo '<input type="text" class="jpicker" style="background-color:#'.$meta.'" name="'.$field['id'].'" id="'.$field['id'].'" value="'.$meta.'" size="5" /><span class="button-primary new-save-lp" id="'.$field['id'].'" style="margin-left:10px; display:none;">Update</span>
 								<div class="lp_tooltip tool_color" title="'.$field['desc'].'"></div>';
 						break;
 					case 'datepicker':
@@ -703,6 +741,32 @@ function lp_generate_drowndown($select_id, $post_type, $selected = 0, $width = 4
 }
 
 
+function lp_wp_editor( $content, $id, $settings = array() )
+{
+	//echo $id;
+	$content = apply_filters('lp_wp_editor_content',$content);
+	$id = apply_filters('lp_wp_editor_id',$id);
+	$settings = apply_filters('lp_wp_editor_settings',$settings);
+	//echo "hello";
+	//echo $id;exit;
+	wp_editor( $content, $id, $settings);
+}
+
+
+function lp_display_headline_input($id,$main_headline)
+{
+	//echo $id;
+	$id = apply_filters('lp_display_headline_input_id',$id);
+
+	echo "<input type='text' name='{$id}' id='{$id}' value='{$main_headline}' size='30'>";
+}
+function lp_display_notes_input($id,$variation_notes)
+{
+	//echo $id;
+	$id = apply_filters('lp_display_notes_input_id',$id);
+
+	echo "<span id='add-lp-notes'>Notes:</span><input placeholder='Add Notes to your variation. Example: This version is testing a green submit button' type='text' class='lp-notes' name='{$id}' id='{$id}' value='{$variation_notes}' size='30'>";
+}
 
 function lp_ready_screenshot_url($link,$datetime)
 {
@@ -736,8 +800,18 @@ function lp_make_percent($rate, $return = false)
 
 function lp_check_license_status($field)
 {
-	$license_key = get_option($field['id']);
+	//print_r($field);exit;
+	$date = date("Y-m-d");
+	$cache_date = get_option($field['id']."-expire");
+	$license_status = get_option('lp_license_status-'.$field['slug']);
+	
+	if (isset($cache_date)&&($date<$cache_date)&&$license_status=='valid')
+	{
+		return "valid";
+	}
 		
+	$license_key = get_option($field['id']);
+	
 	$api_params = array( 
 		'edd_action' => 'check_license', 
 		'license' => $license_key, 
@@ -747,7 +821,7 @@ function lp_check_license_status($field)
 	
 	// Call the custom API.
 	$response = wp_remote_get( add_query_arg( $api_params, LANDINGPAGES_STORE_URL ), array( 'timeout' => 15, 'sslverify' => false ) );
-	//print_r($response);exit;
+	//print_r($response);
 
 	if ( is_wp_error( $response ) )
 		return false;
@@ -756,17 +830,22 @@ function lp_check_license_status($field)
 	//echo $license_data;exit;
 	
 	if( $license_data->license == 'valid' ) {
+		$newDate = date('Y-m-d', strtotime("+15 days"));
+		update_option($field['id']."-expire", $newDate);
 		return 'valid';
 		// this license is still valid
 	} else {
 		return 'invalid';
-		// this license is
 	}
 }
 
-function lp_save_license_status()
-{
-	
+
+function landing_page_get_version() {
+	if ( ! function_exists( 'get_plugins' ) )
+		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+	$plugin_folder = get_plugins( '/' . plugin_basename( dirname( __FILE__ ) ) );
+	$plugin_file = basename( ( __FILE__ ) );
+	return $plugin_folder[$plugin_file]['Version'];
 }
 
 function lp_wpseo_priority(){return 'low';}
@@ -783,6 +862,40 @@ function lp_in_admin_header()
 	}
 }
 
+
+/****************** AB TESTING FUNCTIONS *********************************************************************/
+
+
+function lp_ab_unset_variation($variations,$vid)
+{
+	if(($key = array_search($vid, $variations)) !== false) {
+		unset($variations[$key]);
+	}
+	
+	return $variations;
+}
+
+
+function lp_ab_get_lp_active_status($post,$vid=null)
+{
+	if ($vid==0)
+	{
+		$variation_status = get_post_meta( $post->ID , 'lp_ab_variation_status' , true);
+	}
+	else
+	{
+		$variation_status = get_post_meta( $post->ID , 'lp_ab_variation_status-'.$vid , true);
+	}
+	
+	if (!is_numeric($variation_status))
+	{
+		return 1;
+	}
+	else
+	{	
+		return $variation_status;
+	}
+}
 
   
 ?>

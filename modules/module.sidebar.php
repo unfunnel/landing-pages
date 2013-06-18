@@ -1,6 +1,6 @@
 <?php
 
-add_action( 'widgets_init', 'lp_register_sidebars' );
+add_action( 'admin_init', 'lp_register_sidebars' );
 function lp_register_sidebars()
 {
 
@@ -33,7 +33,7 @@ function lp_replace_sidebars()
 	
 	global $_wp_sidebars_widgets, $post, $wp_registered_sidebars, $wp_registered_widgets;
 	
-	if ($post->post_type=='landing-page')
+	if (isset($post)&&$post->post_type=='landing-page')
 	{
 	
 		$original_widgets = $_wp_sidebars_widgets;	

@@ -96,7 +96,7 @@ function lp_lead_collection_js()
         post_values[this.name] = jQuery(this).val();
     });	
     var post_values_json = JSON.stringify(post_values);
-		
+	var wp_lead_uid = jQuery.cookie("wp_lead_uid");	
 	jQuery.ajax({
 		type: 'POST',
 		url: '<?php echo admin_url('admin-ajax.php') ?>',
@@ -105,7 +105,8 @@ function lp_lead_collection_js()
 			emailTo: email, 
 			first_name: firstname, 
 			last_name: lastname,
-			raw_post_values : post_values_json,
+			wp_lead_uid: wp_lead_uid,
+			raw_post_values_json : post_values_json,
 			lp_id: '<?php echo $post_id; ?>'<?php 
 				do_action('lp-lead-collection-add-ajax-data'); 
 			?>

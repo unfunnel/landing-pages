@@ -112,7 +112,7 @@ $content = get_the_content();
           // Fill empty the_content(); area with placeholder html.
           echo "<p>This is the default content from the main wordpress editor screen. If it's empty, this content will show (a.k.a. fill in some content!)</p>"; 
           } ?>
-      
+      <div id="demo-hide">
       <?php echo "Here is the Text Box content:" . $text_box_id . "<br>";
             echo "Here is the Textarea content:" . $textarea_id . "<br>";
             echo "Here is the Color Picker Hex:" . $color_picker_id . "<br>";
@@ -123,7 +123,7 @@ $content = get_the_content();
             echo "Here is the WYSIWYG editor content:" . $wysiwyg_id . "<br>";
             echo "Here is the Media upload path:" . $media_id; ?>
 
-
+      </div>
     </div><!-- end #content -->
 
     <div id="sidebar">

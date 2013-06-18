@@ -108,7 +108,7 @@ if (have_posts()) : while (have_posts()) : the_post();
         <?php lp_social_media(); // Template helper to print out social media buttons ?>
     </div>
     <!--end #share-toggle -->
-    <?php } ?>
+    <?php } ?> 
     <style type="text/css">
         .gform_wrapper .gsection .gfield_label, .gform_wrapper h2.gsection_title, .gform_wrapper h3.gform_title, .gform_wrapper span.gform_description {
             font-weight: 100;

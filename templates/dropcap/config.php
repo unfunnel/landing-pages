@@ -52,4 +52,4 @@ $lp_data[$key]['options'][] =
 $lp_data[$key]['options'][] = 
 	lp_add_option($key,"colorpicker","background-color","186d6d","Background Color","Use this setting to change the templates background color", $options=null);
 /* Template End Background Settings */
-lp_global_config();
+do_action('lp_global_config');

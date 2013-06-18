@@ -13,51 +13,34 @@ $data['page_id'] = $page_id;
 $data['lead_custom_fields'] = $wplead_data;
 
 ?>
-<h3 class='lp-lead-splash-h3'>User Details:</h3>
-<div id='lead-details-container'>
-<table>
-	<tr>
-		<td>
-			Customer Name:
-		</td>
-		<td>
-			<?php echo $wplead_data['wpleads_first_name'][0]; ?> <?php echo $wplead_data['wpleads_last_name'][0]; ?> 
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Email Address:
-		</td>
-		<td>
-			<?php echo $wplead_data['wpleads_email_address'][0]; ?>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			IP Address:
-		</td>
-		<td>
-			<?php echo $wplead_data['wpleads_ip_address'][0]; ?>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			City:
-		</td>
-		<td>
-			<?php echo $wplead_data['wpleads_city'][0]; ?>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			State:
-		</td>
-		<td>
-			<?php echo $wplead_data['wpleads_region_name'][0]; ?>
-		</td>
-	</tr>	
-</table>
+<link rel='stylesheet'  href='/wp-content/plugins/landing-pages/css/admin-style.css' type='text/css' media='all' />
 
+<div id='lead-details-container'>
+<div id="wp-leads-splash-header">
+<h3 class='lp-lead-splash-h3'>Lead Details: </h3>
+<?php // Conditional check for wp leads add on ?>
+<a href="/wp-admin/post.php?post=<?php echo $lead_id . "&action=edit";?>" class="wplp-green-button wplp-right" target="_blank">View/Edit Lead</a>
+</div>
+<div id="wp-leads-splash-name">
+<div class="wp-lead-label">Name:</div> <?php echo $wplead_data['wpleads_first_name'][0]; ?> <?php echo $wplead_data['wpleads_last_name'][0]; ?> 
+</div>
+			
+<div id="wp-leads-splash-email">
+<div class="wp-lead-label">Email Address:</div> <?php echo $wplead_data['wpleads_email_address'][0]; ?>
+</div>
+<div id="wp-leads-splash-ip">
+<div class="wp-lead-label">IP Address: </div> <?php echo $wplead_data['wpleads_ip_address'][0]; ?>
+</div>
+<div id="wp-leads-splash-city">
+<div class="wp-lead-label">City: </div> <?php echo $wplead_data['wpleads_city'][0]; ?>
+</div>
+<div id="wp-leads-splash-state">
+<div class="wp-lead-label">State: </div> <?php echo $wplead_data['wpleads_region_name'][0]; ?>
+</div>
+
+<div id="wp-leads-extra-data">
+<?php // Conditional check for wp leads add on. If not on, have button to have people download_url( $url, $timeout = 300 ) ?>
 <?php
 do_action('lp_module_lead_splash_post',$data);
 ?>
+</div>

@@ -7,7 +7,7 @@
 * @author 	David Wells
 */
 
-lp_global_config(); // The lp_global_config function is for global code added by 3rd party extensions
+do_action('lp_global_config'); // The lp_global_config function is for global code added by 3rd party extensions
 
 //gets template directory name to use as identifier - do not edit - include in all template files
 $key = lp_get_parent_directory(dirname(__FILE__)); 

@@ -239,7 +239,9 @@ function lp_split_testing_options_popup_display()
 	$post = get_post($lp_post_id); 
 	//echo 1; exit;
 	//print_r($post);exit;
-	
+	       echo '<div class="error"><p>';
+        echo "<h3 style='font-weight:normal;'><strong>Please Note</strong> that this version 1 way of running Landing Page split tests will be phases out of the plugin soon.<br><br> Please use the <strong>new and improved A/B testing functionality</strong> directly in the landing page edit screen.";
+        echo "</h3><h1><a href=\"#\" onClick=\"window.open('http://www.youtube.com/embed/KJ_EDJAvv9Y?autoplay=1','landing-page','width=640,height=480,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,copyhistory=no,resizable=no')\">Watch Video Explanation</a></h1></p></div>";
 	?>
 	<div class="metabox-holder split-test-ui">
 		<div class="meta-box-sortables ui-sortable">
@@ -513,7 +515,9 @@ function lp_split_testing_clone_popup_display()
 	$post = get_post($lp_post_id); 
 	//echo 1; exit;
 	//print_r($post);exit;
-	
+	      echo '<div class="error"><p>';
+        echo "<h3 style='font-weight:normal;'><strong>Please Note</strong> that this version 1 way of running Landing Page split tests will be phases out of the plugin soon.<br><br> Please use the <strong>new and improved A/B testing functionality</strong> directly in the landing page edit screen.";
+        echo "</h3><h1><a href=\"#\" onClick=\"window.open('http://www.youtube.com/embed/KJ_EDJAvv9Y?autoplay=1','landing-page','width=640,height=480,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,copyhistory=no,resizable=no')\">Watch Video Explanation</a></h1></p></div>";
 	?>
 	<div class="metabox-holder split-test-ui">
 		<h2 id="lp-st-tabs" class="nav-tab-wrapper">				

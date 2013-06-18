@@ -82,7 +82,8 @@ $blue = $RBG_array["b"];
             echo "@media (max-width: 630px) { #lp_container {display:none;}}"; // css rule for mobile devices
         }
         ?> <?php if ($sidebar_color !="") {
-            echo "body { background-color: #$sidebar_color;} header#sidebar {background-color: #$sidebar_color;}"; // change sidebar color
+            echo "header#sidebar {background-color: #$sidebar_color;}"; // change sidebar color
+           echo "@media (max-width: 900px) { body { background-color: #$sidebar_color;} }";
         }
         ?> <?php if ($header_color !="") {
             echo "header#begin {background: #$header_color;}"; // change header color
@@ -120,6 +121,8 @@ $blue = $RBG_array["b"];
             $(function () {
                 $('figure, picture').picture();
             });
+            var window_size = jQuery(window).height();
+            jQuery("#river").height(window_size);
         });
     </script>
       <?php wp_head(); // Load Regular WP Head 

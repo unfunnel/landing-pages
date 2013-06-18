@@ -93,7 +93,35 @@ function lp_templates_upload_execute()
 			wp_mkdir_p( $extended_path );
 		}
 		
-		$result = $zip->extract(PCLZIP_OPT_PATH, $extended_path );
+		if (($list = $zip->listContent()) == 0) 
+		{
+			die("There was a problem. Please try again!");
+		}
+		 
+		$is_template = false;
+		foreach ($list as $key=>$val)
+		{
+			foreach ($val as $k=>$val)
+			{
+				if (strstr($val,'/config.php'))
+				{
+					$is_template = true;
+					break;
+				}
+				else if($is_template==true)
+				{
+					break;
+				}
+			}
+		}
+		
+		if (!$is_template)
+		{
+			echo "<br><br><br><br>";
+			die("WARNING! This zip file does not seem to be a template file! If you are trying to install a Landing Page extension please use the Plugin's upload section! Please press the back button and try again!");
+		}
+		//exit;
+		//$result = $zip->extract(PCLZIP_OPT_PATH, $extended_path );
 		
 		if ($result = $zip->extract(PCLZIP_OPT_PATH, $extended_path ,  PCLZIP_OPT_REPLACE_NEWER  ) == 0) 
 		{

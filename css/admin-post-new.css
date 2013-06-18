@@ -3,18 +3,25 @@
 	display:none;
 }
 
-#wpbody-content #screen-options-link-wrap
+#wpbody-content #screen-options-link-wrap, #post-body-content .a_b_tabs
 {
 	display:none;
 }
 
-#lp-thumbnail-sidebar-preview
+#lp-thumbnail-sidebar-preview, #main-title-area, #lp-notes-area
 {
 	display:none;
 }
 #wp-content-wrap, #postdivrich, #postbox-container-2, #misc-publishing-actions, #preview-action, #major-publishing-actions, #edit-slug-box, #submitdiv .handlediv {
 	display: none;
 }
+#titlediv #title {
+-webkit-border-radius: 3px;
+border-radius: 3px;
+border-color: #dfdfdf !important;
+border-width: 1px !important;
+border-style: solid !important;}
+
 #descriptor {
 	padding-left: 5px;
 display: block;

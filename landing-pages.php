@@ -3,12 +3,12 @@
 Plugin Name: Landing Pages
 Plugin URI: http://www.inboundnow.com/landing-pages/
 Description: The first true all-in-one Landing Page solution for WordPress, including ongoing conversion metrics, a/b split testing, unlimited design options and so much more!
-Version: 1.0.8.3
+Version: 1.0.9.2
 Author: David Wells, Hudson Atwell
 Author URI: http://www.inboundnow.com/
 */
 					
-define('LANDINGPAGES_CURRENT_VERSION', '1.0.8.3' );
+define('LANDINGPAGES_CURRENT_VERSION', '1.0.9.2' );
 define('LANDINGPAGES_URLPATH', WP_PLUGIN_URL.'/'.plugin_basename( dirname(__FILE__) ).'/' );
 define('LANDINGPAGES_PATH', WP_PLUGIN_DIR.'/'.plugin_basename( dirname(__FILE__) ).'/' );
 define('LANDINGPAGES_PLUGIN_SLUG', 'landing-pages' );
@@ -17,6 +17,9 @@ $uploads = wp_upload_dir();
 define('LANDINGPAGES_UPLOADS_PATH', $uploads['basedir'].'/landing-pages/templates/' ); 
 define('LANDINGPAGES_UPLOADS_URLPATH', $uploads['baseurl'].'/landing-pages/templates/' ); 
 
+/** 
+ * Load Admin Core Files
+ */
 if (is_admin())
 {
 include_once('functions/functions.admin.php');
@@ -24,6 +27,9 @@ include_once('modules/module.global-settings.php');
 include_once('modules/module.clone.php');
 include_once('modules/module.extension-updater.php');
 }
+/**
+ * load frontend-only and load global core files
+ */
 include_once('functions/functions.global.php');
 include_once('modules/module.post-type.php');
 include_once('modules/module.track.php');
@@ -33,8 +39,13 @@ include_once('modules/module.sidebar.php');
 include_once('modules/module.widgets.php');
 include_once('modules/module.cookies.php');
 include_once('modules/module.lead-collection.php');
+include_once('modules/module.ab-testing.php');
+include_once('modules/module.alert.php');
 include_once('functions/functions.templates.php'); 
 
+/**
+ * REGISTER ACTIVATION!
+ */
 register_activation_hook(__FILE__, 'landing_page_activate');
 
 function landing_page_activate()
@@ -55,9 +66,9 @@ function landing_page_activate()
 	
 }
 	
-/*********PREPARE LANDING PAGE OPTIONS***************/
-/****************************************************/
-/****************************************************/
+/**
+ * PREPARE LANDING PAGE TEMPLATES
+ */
 if (is_admin())
 {
 	//load current url in global variable
@@ -113,8 +124,6 @@ if (is_admin())
 		}
 	}
 	
-	
-	
 	//Select Template
 	//main headline metabox is defined in module-metaboxes.php
 	$lp_data['lp']['options'][] = 	lp_add_option('lp',"radio","selected-template","default","Select Template","This option provides a placeholder for the selected template data", $options=null);
@@ -122,6 +131,7 @@ if (is_admin())
 	//Set Main Headline
 	//main headline metabox is defined in module-metaboxes.php
 	$lp_data['lp']['options'][] =  lp_add_option('lp',"radio","main-headline","","Set Main Headline","Set Main Headline", $options=null);	
+
 	
 	add_action('add_meta_boxes', 'lp_display_meta_box_lp_conversion_area');
 
@@ -135,25 +145,9 @@ if (is_admin())
 
 
 /**
- * Returns current plugin version.
- * 
- * @return string Plugin version
+ * Hook function that will apply css, js, and record impressions
  */
-function landing_page_get_version() {
-	if ( ! function_exists( 'get_plugins' ) )
-		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-	$plugin_folder = get_plugins( '/' . plugin_basename( dirname( __FILE__ ) ) );
-	$plugin_file = basename( ( __FILE__ ) );
-	return $plugin_folder[$plugin_file]['Version'];
-}
-/***********************************************************************/
-/*********EXECUTE CUSTOM CSS,JS AND IMPRESSION TRACKING*****************/
-/***********************************************************************/
-/***********************************************************************/
-
-//hook function that will apply css ,js , and record impressions
 add_action('wp_head','landing_pages_insert_custom_head');
-//this function will apply css ,js , and record impressions
 function landing_pages_insert_custom_head() {
 	global $post;
 	
@@ -212,6 +206,8 @@ function landing_pages_add_conversion_area($content)
 		global $post;
 		
 		$key = get_post_meta($post->ID, 'lp-selected-template', true);
+		$key = apply_filters('lp_selected_template',$key); 
+		
 		if (strstr($key,'-slash-'))
 		{
 			$key = str_replace('-slash-','/',$key);
@@ -278,22 +274,24 @@ if (is_admin())
 		if (current_user_can('manage_options'))
 		{
 
-			add_submenu_page('edit.php?post_type=landing-page', 'Split Tests', 'Split Tests', 'manage_options', 'lp_split_testing','lp_split_testing_display');	
+			add_submenu_page('edit.php?post_type=landing-page', 'URL Rotater', 'URL Rotater', 'manage_options', 'lp_split_testing','lp_split_testing_display');	
 			
 			add_submenu_page('edit.php?post_type=landing-page', 'Templates', 'Templates', 'manage_options', 'lp_manage_templates','lp_manage_templates',100);	
 				
 			add_submenu_page('edit.php?post_type=landing-page', 'Get Addons', 'Get Addons', 'manage_options', 'lp_store','lp_store_display',100);	
 			
 			add_submenu_page('edit.php?post_type=landing-page', 'Global Settings', 'Global Settings', 'manage_options', 'lp_global_settings','lp_display_global_settings');
+
+			// Add settings page for frontend editor
+    		add_submenu_page('edit.php?post_type=landing-page', __('Editor','Editor'), __('Editor','Editor'), 'manage_options', 'lp-frontend-editor', 'lp_frontend_editor_screen');
 			
 		}
 	}
 	
-	/**********************************************************/
-	/******************PREPARE STAT CLEARNING FUNCTIONS********/
-
-	
-	function lp_clear_stats_group($landing_page_ids)
+/**
+ * PREPARE STAT CLEARNING FUNCTIONS
+ */
+function lp_clear_stats_group($landing_page_ids)
 	{
 		$this_array = explode(',',$landing_page_ids);
 		
@@ -306,16 +304,16 @@ if (is_admin())
 	
 }
 
-
-/**********************************************************/
-/**************MAKE SURE WE USE THE RIGHT TEMPLATE*********/
-
-
+/**
+ * MAKE SURE WE USE THE RIGHT TEMPLATE
+ */
 add_filter('single_template', 'lp_custom_template');
 
 function lp_custom_template($single) {
     global $wp_query, $post, $query_string;
 	$template = get_post_meta($post->ID, 'lp-selected-template', true);
+	$template = apply_filters('lp_selected_template',$template); 
+		
 	
 	if (isset($template))
 	{
@@ -335,7 +333,6 @@ function lp_custom_template($single) {
 			}
 			else if ($template!='default')
 			{
-				//echo $template; exit;
 				$template = str_replace('_','-',$template);
 				//echo LANDINGPAGES_URLPATH.'templates/'.$template.'/index.php'; exit;
 				if (file_exists(LANDINGPAGES_PATH.'templates/'.$template.'/index.php'))
@@ -353,4 +350,25 @@ function lp_custom_template($single) {
 	}
     return $single;
 }
+/*
+global $wpdb;
+$data   =   array();
+$wpdb->query("
+  SELECT `meta_key`, `meta_value`
+	FROM $wpdb->postmeta
+	WHERE `post_id` = ".$_GET['post']."
+");
+foreach($wpdb->last_result as $k => $v){
+	$data[$v->meta_key] =   $v->meta_value;
+};
+if (isset($_GET['post']))
+{
+	echo "<pre>";
+	print_r( $data);
+	echo "</pre>";
+}
+/**
+ * LOAD ADDITIONAL MODULES
+ */
+include_once('modules/module.customizer.php');
 ?>
